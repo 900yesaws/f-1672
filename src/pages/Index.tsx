@@ -7,6 +7,7 @@ import ProductList from "@/components/ProductList";
 import ProductForm from "@/components/ProductForm";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
 
 export interface Product {
   id: string;
@@ -22,9 +23,10 @@ export interface Product {
 
 const Index = () => {
   const [products, setProducts] = useLocalStorage<Product[]>("amazon-deals", []);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useLocalStorage<boolean>("amazon-deals-admin", false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { toast } = useToast();
 
   const adminPassword = "admin123"; // Simple password for demo purposes
 
@@ -32,28 +34,53 @@ const Index = () => {
     if (password === adminPassword) {
       setIsAdmin(true);
       setError("");
+      toast({
+        title: "Admin Login Successful",
+        description: "You now have access to admin features",
+      });
     } else {
       setError("Incorrect password");
+      toast({
+        title: "Login Failed",
+        description: "Incorrect password provided",
+        variant: "destructive",
+      });
     }
   };
 
   const handleLogout = () => {
     setIsAdmin(false);
     setPassword("");
+    toast({
+      title: "Logged Out",
+      description: "You have been logged out of admin mode",
+    });
   };
 
   const handleAddProduct = (product: Product) => {
     setProducts([...products, product]);
+    toast({
+      title: "Product Added",
+      description: "Your product has been added successfully",
+    });
   };
 
   const handleEditProduct = (updatedProduct: Product) => {
     setProducts(
       products.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
     );
+    toast({
+      title: "Product Updated",
+      description: "Your changes have been saved",
+    });
   };
 
   const handleDeleteProduct = (id: string) => {
     setProducts(products.filter((p) => p.id !== id));
+    toast({
+      title: "Product Deleted",
+      description: "The product has been removed",
+    });
   };
 
   return (
@@ -84,6 +111,11 @@ const Index = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Admin Password"
                     className="w-full"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleLogin();
+                      }
+                    }}
                   />
                 </div>
                 <Button onClick={handleLogin}>Login</Button>

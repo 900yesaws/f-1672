@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +7,7 @@ import ProductForm from "@/components/ProductForm";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import AdminLoginModal from "@/components/AdminLoginModal";
 
 export interface Product {
   id: string;
@@ -68,8 +68,8 @@ const Index = () => {
 
   const adminPassword = "admin123"; // Simple password for demo purposes
 
-  const handleLogin = () => {
-    if (password === adminPassword) {
+  const handleLogin = (enteredPassword: string) => {
+    if (enteredPassword === adminPassword) {
       setIsAdmin(true);
       setError("");
       toast({
@@ -126,41 +126,24 @@ const Index = () => {
       {/* Header */}
       <header className="bg-white py-8 shadow-sm">
         <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-center text-orange-500">
-            Today's Best Amazon Deals
-          </h1>
-          <p className="text-center text-gray-600 mt-2">
-            Handpicked discounts and limited-time offers
-          </p>
-          
-          {isAdmin ? (
-            <div className="mt-4 text-right">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-4xl md:text-5xl font-bold text-orange-500">
+                Today's Best Amazon Deals
+              </h1>
+              <p className="text-gray-600 mt-2">
+                Handpicked discounts and limited-time offers
+              </p>
+            </div>
+            
+            {isAdmin ? (
               <Button onClick={handleLogout} variant="outline" size="sm">
                 Logout Admin
               </Button>
-            </div>
-          ) : (
-            <div className="mt-6 max-w-xs mx-auto">
-              <div className="flex gap-2">
-                <div className="flex-grow">
-                  <Input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Admin Password"
-                    className="w-full"
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        handleLogin();
-                      }
-                    }}
-                  />
-                </div>
-                <Button onClick={handleLogin}>Login</Button>
-              </div>
-              {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
-            </div>
-          )}
+            ) : (
+              <AdminLoginModal onLogin={handleLogin} error={error} />
+            )}
+          </div>
         </div>
       </header>
 

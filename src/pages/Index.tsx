@@ -21,8 +21,46 @@ export interface Product {
   affiliateLink: string;
 }
 
+// Sample products data
+const sampleProducts: Product[] = [
+  {
+    id: "1",
+    title: "Apple MacBook Pro 14-inch",
+    description: "Latest model with M2 Pro chip, 16GB RAM, 512GB SSD",
+    price: 1799.99,
+    originalPrice: 1999.99,
+    discount: 10,
+    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
+    isLimitedTimeDeal: true,
+    affiliateLink: "https://amazon.com/product/123"
+  },
+  {
+    id: "2",
+    title: "Wireless Noise Cancelling Headphones",
+    description: "Premium over-ear headphones with 30-hour battery life",
+    price: 249.99,
+    originalPrice: 349.99,
+    discount: 29,
+    image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7",
+    isLimitedTimeDeal: false,
+    affiliateLink: "https://amazon.com/product/456"
+  },
+  {
+    id: "3",
+    title: "4K Ultra HD Smart TV - 55 inch",
+    description: "Vibrant colors with HDR and built-in streaming apps",
+    price: 499.99,
+    originalPrice: 699.99,
+    discount: 28,
+    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+    isLimitedTimeDeal: true,
+    affiliateLink: "https://amazon.com/product/789"
+  }
+];
+
 const Index = () => {
-  const [products, setProducts] = useLocalStorage<Product[]>("amazon-deals", []);
+  // Initialize with sample products if the localStorage is empty
+  const [products, setProducts] = useLocalStorage<Product[]>("amazon-deals", sampleProducts);
   const [isAdmin, setIsAdmin] = useLocalStorage<boolean>("amazon-deals-admin", false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");

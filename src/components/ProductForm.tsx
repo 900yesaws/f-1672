@@ -19,6 +19,7 @@ const formSchema = z.object({
   discount: z.coerce.number().min(0).max(100, "Discount must be between 0 and 100"),
   image: z.string().url("Must be a valid URL"),
   isLimitedTimeDeal: z.boolean().default(false),
+  affiliateLink: z.string().url("Must be a valid Amazon affiliate URL").or(z.string().length(0)),
 });
 
 interface ProductFormProps {
@@ -41,6 +42,7 @@ const ProductForm = ({ product, onSubmit, onCancel }: ProductFormProps) => {
           discount: product.discount,
           image: product.image,
           isLimitedTimeDeal: product.isLimitedTimeDeal,
+          affiliateLink: product.affiliateLink || "",
         }
       : {
           title: "",
@@ -50,6 +52,7 @@ const ProductForm = ({ product, onSubmit, onCancel }: ProductFormProps) => {
           discount: 0,
           image: "",
           isLimitedTimeDeal: false,
+          affiliateLink: "",
         },
   });
 
@@ -75,7 +78,14 @@ const ProductForm = ({ product, onSubmit, onCancel }: ProductFormProps) => {
   const handleFormSubmit = (data: z.infer<typeof formSchema>) => {
     onSubmit({
       id: product?.id || crypto.randomUUID(),
-      ...data,
+      title: data.title,
+      description: data.description,
+      price: data.price,
+      originalPrice: data.originalPrice,
+      discount: data.discount,
+      image: data.image,
+      isLimitedTimeDeal: data.isLimitedTimeDeal,
+      affiliateLink: data.affiliateLink || "",
     });
     
     if (!isEditing) {
@@ -87,6 +97,7 @@ const ProductForm = ({ product, onSubmit, onCancel }: ProductFormProps) => {
         discount: 0,
         image: "",
         isLimitedTimeDeal: false,
+        affiliateLink: "",
       });
     }
   };
@@ -133,6 +144,21 @@ const ProductForm = ({ product, onSubmit, onCancel }: ProductFormProps) => {
               <FormControl>
                 <Textarea placeholder="Enter product description" {...field} />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="affiliateLink"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Amazon Affiliate Link</FormLabel>
+              <FormControl>
+                <Input placeholder="https://www.amazon.com/dp/XXXXX?tag=your-tag" {...field} />
+              </FormControl>
+              <FormDescription>Enter your Amazon affiliate link for this product</FormDescription>
               <FormMessage />
             </FormItem>
           )}

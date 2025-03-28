@@ -91,7 +91,14 @@ const ProductList = ({ products, isAdmin, onEdit, onDelete }: ProductListProps) 
               </div>
             </CardContent>
             <CardFooter className="flex justify-between">
-              <Button className="w-full bg-amber-500 hover:bg-amber-600">
+              <Button 
+                className="w-full bg-amber-500 hover:bg-amber-600"
+                onClick={() => {
+                  if (product.affiliateLink) {
+                    window.open(product.affiliateLink, '_blank');
+                  }
+                }}
+              >
                 Buy on Amazon
               </Button>
               

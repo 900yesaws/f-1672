@@ -17,6 +17,7 @@ export interface Product {
   discount: number;
   image: string;
   isLimitedTimeDeal: boolean;
+  affiliateLink: string;
 }
 
 const Index = () => {
